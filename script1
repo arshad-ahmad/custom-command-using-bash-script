@@ -1,0 +1,89 @@
+#! /bin/bash
+
+#section A
+
+
+
+#2.help
+
+if [ "$1" == "--help" ]; then
+	cat /home/arshad/Desktop/xenon/help
+
+#3.version
+
+elif [ "$1" == "--version" ]; then
+	echo 'v0.1.0'
+
+#SECTION B
+
+#part1
+
+#CPU information
+
+elif [ "$1" == "cpu" ] && [ "$2" == "getinfo" ]; then
+	lscpu
+
+#Memory information
+
+elif  [ "$1" == "memory" ] && [ "$2" == "getinfo" ]; then
+	free
+
+
+# new user 
+
+elif [ "$1" == "user" ] && [ "$2" == "create" ]; then
+	echo "$3"
+	sudo adduser --home /$3 $3
+	exit 
+
+#List user
+
+elif [ "$1" == "user" ] && [ "$2" == "list" ] && [ "$3" != "-sudo-only" ] ; then
+	cut -d: -f1 /etc/passwd
+
+
+
+# list sudo users
+
+elif [ "$1" == "user" ] && [ "$2" == "list" ] && [ "$3" == "-sudo-only" ]; then
+	getent group sudo
+
+
+
+#get file detail
+
+elif [ "$1" == "file" ] && [ "$2" == "getinfo" ]; then
+
+	while [ $3 != NULL ]
+	do
+
+        	if [ "$1" == "file" ] && [ "$2" == "getinfo" ] && [ "$3" == "--size" ] || [ "$3" == "-s" ]; then
+        	        stat --printf '%s\n' $4
+        	        break
+
+        	elif [ "$1" == "file" ] && [ "$2" == "getinfo" ] && [ "$3" == "--permissions" ] || [ "$3" == "-p" ]; then
+                	stat --printf '%A\n' $4
+                	break
+
+        	elif [ "$1" == "file" ] && [ "$2" == "getinfo" ] && [ "$3" == "--owner" ] || [ "$3" == "o" ]; then
+                	stat --printf '%U\n' $4
+                	break
+
+        	elif [ "$1" == "file" ] && [ "$2" == "getinfo" ] && [ "$3" == "--last-modified" ] || [ "$3" == "m" ]; then
+                	stat --printf '%y\n' $4
+                	break
+
+        	else [ "$1" == "file" ] && [ "$2" == "getinfo" ];
+                	echo "file      :       " $3
+                	echo "Access    :       " $(stat --printf '%A\n' $3)
+                	echo "Size (B)  :	  " $(stat --printf '%s\n' $3)
+                	echo "Owner     :       " $(stat --printf '%U\n' $3)
+                	echo "Modify    :       " $(stat --printf '%y\n' $3)
+                	break
+
+		fi
+		done
+
+
+fi
+ 
